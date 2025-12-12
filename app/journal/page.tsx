@@ -1,7 +1,7 @@
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { allJournals } from 'contentlayer/generated'
 import { genPageMetadata } from 'app/seo'
-import ListLayout from '@/layouts/ListLayout'
+import JournalListLayout from '@/layouts/JournalListLayout'
 
 const POSTS_PER_PAGE = 5
 
@@ -18,7 +18,7 @@ export default async function JournalPage() {
   }
 
   return (
-    <ListLayout
+    <JournalListLayout
       posts={posts}
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}

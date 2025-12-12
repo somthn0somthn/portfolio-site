@@ -1,4 +1,4 @@
-import ListLayout from '@/layouts/ListLayout'
+import JournalListLayout from '@/layouts/JournalListLayout'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { allJournals } from 'contentlayer/generated'
 import { notFound } from 'next/navigation'
@@ -32,7 +32,7 @@ export default async function Page(props: { params: Promise<{ page: string }> })
   }
 
   return (
-    <ListLayout
+    <JournalListLayout
       posts={posts}
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}

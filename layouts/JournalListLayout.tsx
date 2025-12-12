@@ -8,20 +8,21 @@ import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 
-type ListPost = CoreContent<{
+// Same structural type as ListLayout
+export type ListPost = CoreContent<{
   path: string
   date: string
   title: string
   summary?: string
   tags?: string[]
-  images?: string[] | string
 }>
 
 interface PaginationProps {
   totalPages: number
   currentPage: number
 }
-interface ListLayoutProps {
+
+interface JournalListLayoutProps {
   posts: ListPost[]
   title: string
   initialDisplayPosts?: ListPost[]
@@ -30,12 +31,11 @@ interface ListLayoutProps {
 
 function Pagination({ totalPages, currentPage }: PaginationProps) {
   const pathname = usePathname()
-  const segments = pathname.split('/')
-  const lastSegment = segments[segments.length - 1]
   const basePath = pathname
-    .replace(/^\//, '') // Remove leading slash
-    .replace(/\/page\/\d+\/?$/, '') // Remove any trailing /page
-    .replace(/\/$/, '') // Remove trailing slash
+    .replace(/^\//, '')
+    .replace(/\/page\/\d+\/?$/, '')
+    .replace(/\/$/, '')
+
   const prevPage = currentPage - 1 > 0
   const nextPage = currentPage + 1 <= totalPages
 
@@ -73,30 +73,31 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
   )
 }
 
-export default function ListLayout({
+export default function JournalListLayout({
   posts,
   title,
   initialDisplayPosts = [],
   pagination,
-}: ListLayoutProps) {
+}: JournalListLayoutProps) {
   const [searchValue, setSearchValue] = useState('')
-  const filteredBlogPosts = posts.filter((post) => {
+
+  const filteredPosts = posts.filter((post) => {
     const searchContent = post.title + post.summary + post.tags?.join(' ')
     return searchContent.toLowerCase().includes(searchValue.toLowerCase())
   })
 
   const displayPosts =
-    initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredBlogPosts
+    initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredPosts
 
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        {/* Header + search bar (unchanged) */}
+        {/* Header + search bar */}
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
           <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
             {title}
           </h1>
-          <div className="relative max-w-xl">
+          <div className="relative max-w-lg">
             <label>
               <span className="sr-only">Search articles</span>
               <input
@@ -108,7 +109,7 @@ export default function ListLayout({
               />
             </label>
             <svg
-              className="pointer-events-none absolute top-3 right-3 h-5 w-5 text-gray-400 dark:text-gray-300"
+              className="absolute top-3 right-3 h-5 w-5 text-gray-400 dark:text-gray-300"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -124,74 +125,42 @@ export default function ListLayout({
           </div>
         </div>
 
-        {/* === Grid instead of vertical list === */}
-        <div className="pt-6">
-          {!filteredBlogPosts.length && <p>No posts found.</p>}
-
-          {/* Grid: 1 col on mobile, 2 on md, 3 on xl */}
-          <ul className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {displayPosts.map((post) => {
-              const { path, date, title, summary, tags, images } = post
-
-              const thumbnail =
-                typeof images === 'string'
-                  ? images
-                  : Array.isArray(images) && images.length > 0
-                    ? images[0]
-                    : null
-
-              return (
-                <li key={path}>
-                  <article className="hover:border-primary-500 flex h-full flex-col overflow-hidden rounded-2xl border border-gray-800 bg-slate-900/40 shadow-sm transition hover:bg-slate-900">
-                    {/* Clickable area: image + title + summary */}
-                    <Link href={`/${path}`} className="flex flex-1 flex-col">
-                      {/* Top image */}
-                      {thumbnail && (
-                        <div className="relative h-40 w-full overflow-hidden bg-slate-800">
-                          <img
-                            src={thumbnail}
-                            alt={title}
-                            className="h-full w-full object-cover"
-                            loading="lazy"
-                          />
-                        </div>
-                      )}
-
-                      {/* Text content */}
-                      <div className="flex flex-1 flex-col space-y-2 p-4">
-                        <p className="text-sm text-gray-400">
-                          <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
-                        </p>
-
-                        <h2 className="group-hover:text-primary-400 text-lg font-semibold text-gray-100">
+        {/* Original “news reel” list */}
+        <ul>
+          {!filteredPosts.length && 'No posts found.'}
+          {displayPosts.map((post) => {
+            const { path, date, title, summary, tags } = post
+            return (
+              <li key={path} className="py-4">
+                <article className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
+                  <dl>
+                    <dt className="sr-only">Published on</dt>
+                    <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
+                      <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
+                    </dd>
+                  </dl>
+                  <div className="space-y-3 xl:col-span-3">
+                    <div>
+                      <h3 className="text-2xl leading-8 font-bold tracking-tight">
+                        <Link href={`/${path}`} className="text-gray-900 dark:text-gray-100">
                           {title}
-                        </h2>
-
-                        {summary && <p className="line-clamp-3 text-sm text-gray-400">{summary}</p>}
-                      </div>
-                    </Link>
-
-                    {/* Footer: tags + read more, not wrapped by the big Link */}
-                    <div className="flex items-center justify-between gap-2 border-t border-gray-800 px-4 py-3">
-                      <div className="flex flex-wrap gap-1">
+                        </Link>
+                      </h3>
+                      <div className="flex flex-wrap">
                         {tags?.map((tag) => <Tag key={tag} text={tag} />)}
                       </div>
-                      <Link
-                        href={`/${path}`}
-                        className="text-primary-400 hover:text-primary-300 text-sm font-medium"
-                      >
-                        Read more →
-                      </Link>
                     </div>
-                  </article>
-                </li>
-              )
-            })}
-          </ul>
-        </div>
+                    <div className="prose max-w-none text-gray-500 dark:text-gray-400">
+                      {summary}
+                    </div>
+                  </div>
+                </article>
+              </li>
+            )
+          })}
+        </ul>
       </div>
 
-      {/* Pagination stays exactly the same */}
       {pagination && pagination.totalPages > 1 && !searchValue && (
         <Pagination currentPage={pagination.currentPage} totalPages={pagination.totalPages} />
       )}
