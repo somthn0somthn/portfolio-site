@@ -1,6 +1,7 @@
 // app/page.tsx
 import Link from '@/components/Link'
 import { genPageMetadata } from 'app/seo'
+import P5Background from '@/components/P5Background'
 
 export const metadata = genPageMetadata({
   title: 'Home',
@@ -9,30 +10,36 @@ export const metadata = genPageMetadata({
 
 export default function HomePage() {
   return (
-    <main className="flex min-h-[70vh] flex-col justify-center">
-      <section className="space-y-6">
-        <p className="text-primary-400 text-sm font-medium tracking-[0.3em] uppercase">
+    <main className="relative min-h-[70vh] overflow-hidden">
+      {/* Animated p5 background */}
+      <P5Background />
+
+      {/* Foreground content */}
+      <section className="relative z-10 mx-auto flex max-w-5xl flex-col justify-center px-6 py-20">
+        <p className="text-primary-300/90 text-xs font-semibold tracking-[0.35em] uppercase">
           Inner Algorithm
         </p>
-        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl dark:text-gray-100">
+
+        <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-50 drop-shadow-[0_0_22px_rgba(0,0,0,0.7)] sm:text-5xl md:text-6xl">
           Luke Mahoney
         </h1>
 
-        <p className="max-w-2xl text-lg text-gray-600 dark:text-gray-300">
+        <p className="mt-4 max-w-2xl text-base text-slate-200/95 sm:text-lg">
           Technical PM & blockchain engineer in Japan. This site collects deep–dive essays, rough
           journal notes, and project work in web3, systems, and AI.
         </p>
 
-        <div className="flex flex-wrap gap-4 pt-2">
+        <div className="mt-6 flex flex-wrap gap-4">
           <Link
             href="/blog"
-            className="bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-400 rounded-lg px-5 py-2.5 text-sm font-medium text-white"
+            className="bg-primary-500/95 hover:bg-primary-400 focus-visible:ring-primary-400 shadow-primary-500/30 rounded-lg px-5 py-2.5 text-sm font-semibold text-white shadow-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 focus-visible:outline-none"
           >
             Read the blog
           </Link>
+
           <Link
             href="/journal"
-            className="hover:border-primary-500 hover:text-primary-500 dark:hover:border-primary-400 dark:hover:text-primary-400 rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-900 dark:border-gray-700 dark:text-gray-100"
+            className="hover:border-primary-400 hover:text-primary-300 dark:hover:border-primary-300 dark:hover:text-primary-200 rounded-lg border border-slate-600/70 px-5 py-2.5 text-sm font-medium text-slate-100 backdrop-blur-sm"
           >
             Browse the journal
           </Link>
