@@ -14,6 +14,15 @@ export default function P5Background() {
     let p5Instance: p5 | undefined
     let cancelled = false
 
+    if (typeof window !== 'undefined') {
+      const mq = window.matchMedia?.('(prefers-reduced-motion: reduce)')
+      if (mq?.matches) {
+        return () => {
+          /* no-op cleanup */
+        }
+      }
+    }
+
     // Dynamic import so p5 never runs on the server
     ;(async () => {
       const p5Module = await import('p5')
@@ -61,8 +70,13 @@ export default function P5Background() {
 
             if (this.captured > 0.01) {
               p.noFill()
-              p.stroke(255, 160 * this.captured)
-              p.strokeWeight(1)
+              const isDark = document.documentElement.classList.contains('dark')
+              if (isDark) {
+                p.stroke(255, 160 * this.captured) // white for dark mode
+              } else {
+                p.stroke(0, 100 * this.captured) // dark for light mode
+              }
+              p.strokeWeight(1.5)
               p.ellipse(this.x, this.y, s + 6, s + 6)
             }
           }
@@ -128,9 +142,7 @@ export default function P5Background() {
         }
 
         p.draw = () => {
-          // Darker background tends to look nicer under content
-          p.background(6, 10, 20)
-
+          p.clear()
           for (let i = 0; i < circles.length; i++) {
             circles[i].update()
             circles[i].display()

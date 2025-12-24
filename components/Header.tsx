@@ -13,7 +13,6 @@ const Header = () => {
     'py-6 sm:py-8',
     'bg-white/60 dark:bg-gray-950/60', // slightly transparent
     'backdrop-blur-md', // glass effect
-    'shadow-sm shadow-black/20', // very subtle depth, no border
   ].join(' ')
 
   if (siteMetadata.stickyNav) {
