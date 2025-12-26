@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { formatDate } from 'pliny/utils/formatDate'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import Link from '@/components/Link'
-import Tag from '@/components/Tag'
+import Card from '@/components/Card'
 import siteMetadata from '@/data/siteMetadata'
 
 type ListPost = CoreContent<{
@@ -142,52 +142,15 @@ export default function ListLayout({
 
               return (
                 <li key={path}>
-                  <article className="hover:border-primary-500 border-border bg-surface/40 hover:bg-surface flex h-full flex-col overflow-hidden rounded-2xl border shadow-sm transition">
-                    {/* Clickable area: image + title + summary */}
-                    <Link href={`/${path}`} className="flex flex-1 flex-col">
-                      {/* Top image */}
-                      {thumbnail && (
-                        <div className="relative h-40 w-full overflow-hidden bg-gray-200 dark:bg-gray-800">
-                          <img
-                            src={thumbnail}
-                            alt={title}
-                            className="h-full w-full object-cover"
-                            loading="lazy"
-                          />
-                        </div>
-                      )}
-
-                      {/* Text content */}
-                      <div className="flex flex-1 flex-col space-y-2 p-4">
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
-                        </p>
-
-                        <h2 className="group-hover:text-primary-400 text-lg font-semibold text-gray-900 dark:text-gray-100">
-                          {title}
-                        </h2>
-
-                        {summary && (
-                          <p className="line-clamp-3 text-sm text-gray-500 dark:text-gray-400">
-                            {summary}
-                          </p>
-                        )}
-                      </div>
-                    </Link>
-
-                    {/* Footer: tags + read more, not wrapped by the big Link */}
-                    <div className="border-border flex items-center justify-between gap-2 border-t px-4 py-3">
-                      <div className="flex flex-wrap gap-1">
-                        {tags?.map((tag) => <Tag key={tag} text={tag} />)}
-                      </div>
-                      <Link
-                        href={`/${path}`}
-                        className="text-primary-500 hover:text-primary-400 text-sm font-medium"
-                      >
-                        Read more →
-                      </Link>
-                    </div>
-                  </article>
+                  <Card
+                    title={title}
+                    description={summary}
+                    imgSrc={thumbnail ?? undefined}
+                    href={`/${path}`}
+                    date={formatDate(date, siteMetadata.locale)}
+                    tags={tags}
+                    linkText="Read more"
+                  />
                 </li>
               )
             })}

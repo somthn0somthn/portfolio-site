@@ -22,7 +22,7 @@ interface PaginationProps {
   currentPage: number
 }
 
-interface JournalListLayoutProps {
+interface NoteListLayoutProps {
   posts: ListPost[]
   title: string
   initialDisplayPosts?: ListPost[]
@@ -73,12 +73,12 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
   )
 }
 
-export default function JournalListLayout({
+export default function NoteListLayout({
   posts,
   title,
   initialDisplayPosts = [],
   pagination,
-}: JournalListLayoutProps) {
+}: NoteListLayoutProps) {
   const [searchValue, setSearchValue] = useState('')
 
   const filteredPosts = posts.filter((post) => {

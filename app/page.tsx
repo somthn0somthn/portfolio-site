@@ -17,7 +17,8 @@ export default function HomePage() {
       {/* Foreground content */}
       <section className="relative z-10 mx-auto flex max-w-5xl flex-col justify-center px-6 py-20">
         {/* Frosted glass hero panel */}
-        <div className="bg-background/70 dark:bg-surface/80 inline-flex max-w-3xl flex-col gap-4 rounded-3xl px-8 py-8 backdrop-blur-md">
+        <div className="bg-background/70 dark:bg-surface/30 inline-flex max-w-3xl flex-col gap-4 rounded-3xl px-8 py-8 backdrop-blur-sm">
+          {' '}
           <p className="text-primary-500 dark:text-primary-300/90 mb-1 text-xs font-semibold tracking-[0.35em] uppercase">
             Quiet Complexity
           </p>

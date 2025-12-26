@@ -1,14 +1,14 @@
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
-import { allJournals } from 'contentlayer/generated'
+import { allNotes } from 'contentlayer/generated'
 import { genPageMetadata } from 'app/seo'
-import JournalListLayout from '@/layouts/JournalListLayout'
+import NoteListLayout from '@/layouts/NoteListLayout'
 
 const POSTS_PER_PAGE = 5
 
-export const metadata = genPageMetadata({ title: 'Journal' })
+export const metadata = genPageMetadata({ title: 'Notes' })
 
-export default async function JournalPage() {
-  const posts = allCoreContent(sortPosts(allJournals))
+export default async function NotesPage() {
+  const posts = allCoreContent(sortPosts(allNotes))
   const pageNumber = 1
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
   const initialDisplayPosts = posts.slice(0, POSTS_PER_PAGE * pageNumber)
@@ -18,7 +18,7 @@ export default async function JournalPage() {
   }
 
   return (
-    <JournalListLayout
+    <NoteListLayout
       posts={posts}
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}

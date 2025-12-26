@@ -128,9 +128,9 @@ export const Blog = defineDocumentType(() => ({
   },
 }))
 
-export const Journal = defineDocumentType(() => ({
-  name: 'Journal',
-  filePathPattern: 'journal/**/*.mdx',
+export const Notes = defineDocumentType(() => ({
+  name: 'Notes',
+  filePathPattern: 'notes/**/*.mdx',
   contentType: 'mdx',
   fields: {
     title: { type: 'string', required: true },
@@ -184,7 +184,7 @@ export const Authors = defineDocumentType(() => ({
 
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Blog, Authors, Journal],
+  documentTypes: [Blog, Authors, Notes],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [
@@ -215,8 +215,8 @@ export default makeSource({
     ],
   },
   onSuccess: async (importData) => {
-    const { allBlogs, allJournals } = await importData()
-    const allDocs = [...allBlogs, ...allJournals]
+    const { allBlogs, allNotes } = await importData()
+    const allDocs = [...allBlogs, ...allNotes]
 
     await createTagCount(allDocs)
     createSearchIndex(allDocs)
