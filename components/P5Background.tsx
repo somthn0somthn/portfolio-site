@@ -3,9 +3,9 @@
 import { useEffect, useRef } from 'react'
 import type p5 from 'p5'
 
-const PALETTE = ['#06D6A0', '#118AB2', '#FFD166', '#EF476F', '#073B4C']
+const PALETTE = ['#0D9488', '#0e7490', '#14b8a6', '#64748b', '#e11d48']
 const DIST_MOUSE = 50
-const DOT_SIZE = 30
+const DOT_SIZE = 24
 
 export default function P5Background() {
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -49,7 +49,7 @@ export default function P5Background() {
             this.y = y
             this.size = size
             this.col = p.color(p.random(PALETTE))
-            this.col.setAlpha(150)
+            this.col.setAlpha(120)
 
             this.speed = p.random(0.5, 2)
             const angle = p.random(360)
@@ -119,7 +119,7 @@ export default function P5Background() {
           const w = p.width
           const h = p.height
 
-          objects = Math.min(120, Math.floor((w * h) / 40000))
+          objects = Math.min(80, Math.floor((w * h) / 50000))
 
           for (let i = 0; i < objects; i++) {
             circles.push(new Dot(p.random(w), p.random(h), DOT_SIZE))

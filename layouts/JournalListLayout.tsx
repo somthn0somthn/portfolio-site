@@ -91,7 +91,7 @@ export default function JournalListLayout({
 
   return (
     <>
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
+      <div className="divide-border divide-y">
         {/* Header + search bar */}
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
           <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
@@ -105,7 +105,7 @@ export default function JournalListLayout({
                 type="text"
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Search articles"
-                className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-900 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-100"
+                className="focus:border-primary-500 focus:ring-primary-500 border-border bg-background text-foreground dark:bg-surface block w-full rounded-md border px-4 py-2"
               />
             </label>
             <svg
@@ -125,14 +125,14 @@ export default function JournalListLayout({
           </div>
         </div>
 
-        {/* Original “news reel” list */}
+        {/* Original "news reel" list */}
         <ul>
           {!filteredPosts.length && 'No posts found.'}
           {displayPosts.map((post) => {
             const { path, date, title, summary, tags } = post
             return (
               <li key={path} className="py-4">
-                <article className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
+                <article className="group hover:bg-surface/50 -mx-4 space-y-2 rounded-lg px-4 py-2 transition-colors xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
                   <dl>
                     <dt className="sr-only">Published on</dt>
                     <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
@@ -142,7 +142,10 @@ export default function JournalListLayout({
                   <div className="space-y-3 xl:col-span-3">
                     <div>
                       <h3 className="text-2xl leading-8 font-bold tracking-tight">
-                        <Link href={`/${path}`} className="text-gray-900 dark:text-gray-100">
+                        <Link
+                          href={`/${path}`}
+                          className="group-hover:text-primary-500 dark:group-hover:text-primary-400 text-gray-900 transition-colors dark:text-gray-100"
+                        >
                           {title}
                         </Link>
                       </h3>

@@ -7,12 +7,11 @@ import ThemeSwitch from './ThemeSwitch'
 import SearchButton from './SearchButton'
 
 const Header = () => {
-  // Glassy, semi-transparent navbar with no hard bottom border
   let headerClass = [
     'flex w-full items-center justify-between',
     'py-6 sm:py-8',
-    'bg-white/60 dark:bg-gray-950/60', // slightly transparent
-    'backdrop-blur-md', // glass effect
+    'bg-background/60 dark:bg-background/60',
+    'backdrop-blur-md',
   ].join(' ')
 
   if (siteMetadata.stickyNav) {
@@ -24,7 +23,7 @@ const Header = () => {
       <Link href="/" aria-label={siteMetadata.headerTitle}>
         <div className="flex items-center justify-between">
           <div className="mr-3">
-            <Logo />
+            <Logo className="h-12 w-auto sm:h-14 md:h-16" />
           </div>
           {typeof siteMetadata.headerTitle === 'string' ? (
             <div className="hidden h-6 text-2xl font-semibold sm:block">

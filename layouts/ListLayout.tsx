@@ -90,8 +90,8 @@ export default function ListLayout({
 
   return (
     <>
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        {/* Header + search bar (unchanged) */}
+      <div className="divide-border divide-y">
+        {/* Header + search bar */}
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
           <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
             {title}
@@ -104,7 +104,7 @@ export default function ListLayout({
                 type="text"
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Search articles"
-                className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-900 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-100"
+                className="focus:border-primary-500 focus:ring-primary-500 border-border bg-background text-foreground dark:bg-surface block w-full rounded-md border px-4 py-2"
               />
             </label>
             <svg
@@ -142,12 +142,12 @@ export default function ListLayout({
 
               return (
                 <li key={path}>
-                  <article className="hover:border-primary-500 flex h-full flex-col overflow-hidden rounded-2xl border border-gray-800 bg-slate-900/40 shadow-sm transition hover:bg-slate-900">
+                  <article className="hover:border-primary-500 border-border bg-surface/40 hover:bg-surface flex h-full flex-col overflow-hidden rounded-2xl border shadow-sm transition">
                     {/* Clickable area: image + title + summary */}
                     <Link href={`/${path}`} className="flex flex-1 flex-col">
                       {/* Top image */}
                       {thumbnail && (
-                        <div className="relative h-40 w-full overflow-hidden bg-slate-800">
+                        <div className="relative h-40 w-full overflow-hidden bg-gray-200 dark:bg-gray-800">
                           <img
                             src={thumbnail}
                             alt={title}
@@ -159,26 +159,30 @@ export default function ListLayout({
 
                       {/* Text content */}
                       <div className="flex flex-1 flex-col space-y-2 p-4">
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
                           <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
                         </p>
 
-                        <h2 className="group-hover:text-primary-400 text-lg font-semibold text-gray-100">
+                        <h2 className="group-hover:text-primary-400 text-lg font-semibold text-gray-900 dark:text-gray-100">
                           {title}
                         </h2>
 
-                        {summary && <p className="line-clamp-3 text-sm text-gray-400">{summary}</p>}
+                        {summary && (
+                          <p className="line-clamp-3 text-sm text-gray-500 dark:text-gray-400">
+                            {summary}
+                          </p>
+                        )}
                       </div>
                     </Link>
 
                     {/* Footer: tags + read more, not wrapped by the big Link */}
-                    <div className="flex items-center justify-between gap-2 border-t border-gray-800 px-4 py-3">
+                    <div className="border-border flex items-center justify-between gap-2 border-t px-4 py-3">
                       <div className="flex flex-wrap gap-1">
                         {tags?.map((tag) => <Tag key={tag} text={tag} />)}
                       </div>
                       <Link
                         href={`/${path}`}
-                        className="text-primary-400 hover:text-primary-300 text-sm font-medium"
+                        className="text-primary-500 hover:text-primary-400 text-sm font-medium"
                       >
                         Read more →
                       </Link>
