@@ -26,7 +26,7 @@ export default function HomePage() {
             Luke Mahoney
           </h1>
           <p className="max-w-2xl text-base text-gray-700 sm:text-lg dark:text-gray-200">
-            Technical Project Manager & blockchain engineer. This site collects deep–dive essays,
+            Technical Program Manager & Blockchain Engineer. This site collects deep–dive essays,
             TIL notes, and project work in web3 and systems.
           </p>
           <div className="mt-4 flex flex-wrap gap-4">
