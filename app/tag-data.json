@@ -15,5 +15,9 @@
   "book": 1,
   "reflection": 1,
   "multi-author": 1,
-  "notes": 1
+  "notes": 1,
+  "operating-systems": 1,
+  "memory": 1,
+  "virtual-memory": 1,
+  "paging": 1
 }
