@@ -1,13 +1,11 @@
 ---
-title: 'WORKING TITLE'
+title: '3 Ways Fixed-Cost Projects Derail (and the Early Warning Signs)'
 date: '2026-02-05'
 lastmod: '2026-02-05'
 tags: ['Delivery', 'Fixed-cost', 'Scoping']
 draft: false
 layout: PostBanner
-summary: 'Looking for a performant, out of the box template, with all the best in web
-  technology to support your blogging needs? Checkout the Tailwind Nextjs
-  Starter Blog template.'
+summary: 'Fixed-cost delivery can go sideways even when everyone is competent. This post breaks down three common failure modes and shows the early warning signs that appear before timelines (and budgets) slip.'
 images: ['/static/images/iceberg.png']
 authors: ['default']
 ---
@@ -24,7 +22,7 @@ costs, and engineers burn out.
 ## Scope drift
 
 Anyone who has worked in R&D-heavy efforts or novel technology stacks has seen
-what scope drift does to delivery. In time-and-material arrangements, it’s
+what scope drift does to delivery. In time-and-materials arrangements, it’s
 painful but survivable because priorities shift, new information arrives, and
 the budget moves with the work. In fixed-cost delivery, the same dynamic is more
 dangerous because scope expands while the economics do not.
@@ -126,7 +124,7 @@ right design choice and the kind of improvement that should reduce headaches
 over the long term. The catch was that the refactor and platform work (repo
 split, CI wiring, shared test strategy, release/versioning decisions)
 effectively created a small platform project inside the project. The result was
-roughly a 5–7 developer-week overrun.
+roughly several engineer-weeks of overrun.
 
 The pain here was far too asymmetric to be justified. The delivery absorbs the
 cost immediately, while the payoff lands later and can easily land outside the
@@ -178,7 +176,7 @@ Three patterns show up repeatedly.
 ### Specification/correctness bottleneck
 
 On some R&D-heavy projects, correctness is explicitly anchored to formal
-specification artifacts (Agda/Lean/Coq-style work) that define what the system
+specification artifacts (formal methods/spec language work) that define what the system
 is and is not allowed to do. That level of rigor can be a genuine advantage
 because it reduces ambiguity, forces clean design decisions, front-loads a
 surprising amount of scoping, and gives a real definition of “correct” (i.e.,
@@ -186,8 +184,8 @@ surprising amount of scoping, and gives a real definition of “correct” (i.e.
 
 The downside is that it can create a serious review gate.
 
-Formal specs still have to be translated into an implementation. When the chief
-scientist or spec author is the only person who can reliably judge whether
+Formal specs still have to be translated into an implementation. When the domain
+lead or spec author is the only person who can reliably judge whether
 sensitive changes preserve the intended model, they become the approval path for
 anything design-adjacent or anything “close to the metal” in the core logic.
 
@@ -279,5 +277,5 @@ unpriced work accumulates faster than the plan can absorb it, including drift in
 what “Done” means, invisible platform overhead, and single-lane bridges that
 quietly become the schedule. The fixes are boring but effective. Define “Done”
 as proof, make out-of-scope explicit, price the platform tax, and watch the
-queueing signals closely. If those controls feel heavy, it’s usually because the
-project is already running on hidden debt
+queuing signals closely. If those controls feel heavy, it’s usually because the
+project is already running on hidden debt.
