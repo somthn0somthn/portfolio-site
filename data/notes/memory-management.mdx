@@ -1,0 +1,214 @@
+---
+title: 'Memmory Management: the Abstraction and the Machinery'
+date: '2026-01-31'
+summary: Examining memory management in modern systems
+tags: ['operating-systems', 'memory', 'virtual-memory', 'paging']
+draft: false
+---
+
+- Physical memory is finite; main memory is DRAM, and the CPU also uses small
+  SRAM caches to hide DRAM latency.
+- Processes want a simple, exclusive view of memory, but exposing physical
+  memory directly breaks relocation, protection, and multiprogramming.
+- Virtual memory performs a powerful "sleight of hand" by presenting a greater
+  scope of "available memory" to a process (without allocating that memory up
+  front) and handling the overhead involved.
+
+## What is memory
+
+Memory is a crucial system resource, and its proper management is important. RAM
+stores a process's instructions and data while it is running. When a program
+starts, the operating system's loader brings it into RAM from persistent memory
+or a peripheral device.
+
+**Physical memory** on a system is naturally finite. Main memory is DRAM; CPU
+caches are typically [SRAM](https://www.youtube.com/watch?v=PujjqfUhtNo). DRAM
+is composed of transistors and associated capacitors. A DRAM cell stores a bit
+as a charge in a capacitor and must be refreshed. It is dense and inexpensive.
+
+SRAM is faster and more expensive.
+[SRAM cells](https://www.electronicshub.org/sram-vs-dram/) are organized as
+cross-coupled inverters with two pass transistors. Both DRAM and SRAM are
+volatile and cleared on power-off.
+
+In the case of simple machines or embedded devices without mature memory
+abstraction, the program may be directly and even solely loaded into a device's
+physical memory. For a machine supporting one program in RAM at a time, when
+another program is run, the old process's state is simply overwritten.
+
+Hardware protection mechanisms make multiprogramming viable by allowing several
+processes to live in memory simultaneously while ensuring each process can only
+access the memory to which it is permitted. In modern systems, this protection
+is primarily enforced by the **Memory Management Unit**, or MMU, using
+per-process page tables and access bits. Some CPUs also provide additional
+mechanisms, such as memory protection keys to enable fast permission changes
+without rewriting page tables.
+
+At times of memory pressure, the OS may evict cold pages. File-backed pages can
+be dropped and reloaded on demand, and anonymous pages may be written to swap
+and faulted back in later. This is commonly called **swapping**.
+
+## Logical memory
+
+Exposing processes directly to physical memory involves several challenges:
+
+- Referencing absolute physical addresses is brittle.
+- **Static relocation** is cumbersome.
+- Security issues result from programs having overly broad memory access.
+- A greater burden on compilers and programmers to manually manage memory
+  details, such as instruction offsets.
+
+Yet, it is profoundly simpler for processes (and programmers) to conceptually
+work with memory as one contiguous block.
+
+**Logical memory** is a powerful abstraction central to modern memory management
+(_"logical memory"_ and _"virtual memory"_ are often used interchangeably, but
+here I'm trying to maintain a distinction). Logical memory presents processes
+with a single, contiguous block of memory to utilize, and the mapping of logical
+to physical memory is performed by the MMU in hardware.
+
+Per-process **address spaces** are how available memory is represented to
+processes and are the basic units of this abstraction. This abstraction pairs
+naturally with the process model itself. For instance, just as a process gets
+the illusion of its own CPU time, it also gets the illusion of its own memory
+via address spaces.
+
+The MMU plays a central role in this abstraction. Essentially, it orchestrates
+the mapping from a process's logical addresses to physical memory by translating
+addresses at runtime (via simple relocation in some designs, or via page tables
+in modern systems). Interjecting the MMU in this way makes it easier to reason
+about memory usage while preventing processes from reading or writing memory
+they do not control.
+
+## Virtual memory in practice
+
+This memory mapping process also allows for an interesting "sleight of hand."
+Because processes are no longer bound directly to physical memory, they are not
+constrained by the finite limits of a system's available memory. A process can
+virtually assume it occupies all of RAM and more, allowing the OS and hardware
+to handle the details.
+
+Yet, when it is time to execute a given process instruction, that instruction
+and the associated data must be available in physical memory. **Virtual memory**
+provides each process with its own address space, which is broken into discrete,
+contiguous logical portions called **pages**. Pages are mapped to frames in
+physical memory, but not all of a process's pages need to be in RAM at a given
+time. A **page table** tracks the relationship between the virtual address space
+and the more limited addresses available in physical memory.
+
+At times, the CPU may access a virtual address whose page is not currently
+resident in physical memory (or is not permitted), resulting in a **page
+fault**. Unsurprisingly, this must be handled by the OS. The MMU triggers a trap
+to the kernel, which may evict a resident page to free a frame and then load the
+requested page into RAM. This fault-handling paging path can be relatively slow.
+
+Even when pages _are_ resident, address translation has overhead. Hardware like
+the **Translation Lookaside Buffer (TLB)** speeds this up by caching recent
+virtual-to-physical translations, avoiding repeated page-table walks.
+
+## Tracing a process
+
+This is all well and good, but is it possible to get hands-on with these
+abstractions in the wild?
+
+To do this, I'll use a short Python script:
+
+```python
+import os, time, mmap
+
+print("PID:", os.getpid())
+
+size = 512 * 1024 * 1024  # 512 MiB
+mapping = mmap.mmap(-1, size, access=mmap.ACCESS_WRITE)
+print("Reserved", size, "bytes of virtual memory.")
+time.sleep(30) # Time to run ps cli commands in another terminal
+
+page = 4096
+touched = 0
+while touched < size:
+    mapping[touched:touched+1] = b"a"  # Touches a page: minor page fault
+    touched += page
+    if touched % (64 * 1024 * 1024) == 0:
+        print("Touched", touched // (1024*1024), "MiB")
+        time.sleep(1)
+
+print("Done. Sleeping.")
+time.sleep(30)
+
+```
+
+This script queries the current process number and then leverages `mmap` to
+create an anonymous memory mapping in virtual memory. It then touches each
+virtual page assigned to the process to bring it into physical memory and
+applies some throttling to improve observability.
+
+Running it on a Linux x86_64 machine, as execution progresses, I see in `stdout`:
+
+```bash
+PID: 43865
+Reserved 536870912 bytes (virtual)
+Touched 64 MiB
+Touched 128 MiB
+Touched 192 MiB
+Touched 256 MiB
+Touched 320 MiB
+Touched 384 MiB
+Touched 448 MiB
+Touched 512 MiB
+Done. Sleeping.
+```
+
+Which is exactly what we'd expect. However, the real insight comes from watching
+`ps` in another terminal:
+
+```bash
+$ watch -n 1 "ps -o pid,comm,vsz,rss -p 43865"
+
+  PID COMMAND            VSZ   RSS
+  43865 python3         543452  9692
+```
+
+The virtual memory, as shown by `VSZ`, is quickly allocated, while the physical
+memory, as represented by the Resident Set Size (`RSS`), is not. That's expected,
+but why isn't `RSS` zero and `VSZ` precisely `536870912` bytes?
+
+Commenting out the core of the script - except the `getpid()` call - and
+examining the process's smaps file quickly shows why:
+
+```bash
+$ cat /proc/39604/smaps
+```
+
+The Python interpreter and runtime provide us the convenience of assigning
+virtual memory to a number of resources and low-level libraries. Things like
+portions of the math library have been assigned virtual memory but have not yet
+page-faulted into physical memory, while things like the dynamic linker/loader
+are already in physical memory.
+
+Returning to our original script, we naturally see physical allocation grow as
+more memory pages are touched: `9788` → `75324` → `140860` → ... → `534076`.
+That's the specified 512 MiB plus overhead from the Python runtime.
+
+Examining per-process faults provides a final insight:
+
+```bash
+$ watch -n 1 "ps -o pid,comm,min_flt,maj_flt -p 43865"
+```
+
+The process causes minor faults as the script imports Python libraries and the
+individual pages are touched. This watch command sees `MINFL` grow: `959` →
+`959` → `17343` → ... → `132031`. Importantly, the `mmap` reservation did not
+induce page faults. This was expected. There are also no major faults (`maj_flt`), which would
+indicate disk-backed page-in.
+
+## Conclusion
+
+Virtual memory gives processes the illusion of abundant, contiguous memory,
+making life easier for programmers and user space alike. In practice, the kernel
+and MMU handle the messy reality with manageable overhead until memory pressure
+forces tradeoffs.
+
+The `VSZ` abstraction reflects how much virtual address space a process has
+mapped, while `RSS` shows what’s actually resident in physical memory. Page faults
+bridge this gap: much of a process’s “memory” exists only as mappings and
+promises until it is actually touched.

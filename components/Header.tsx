@@ -12,10 +12,11 @@ const Header = () => {
     'py-6 sm:py-8',
     'bg-background/60 dark:bg-background/60',
     'backdrop-blur-md',
+    'relative z-50',
   ].join(' ')
 
   if (siteMetadata.stickyNav) {
-    headerClass += ' sticky top-0 z-50'
+    headerClass += ' sticky top-0'
   }
 
   return (

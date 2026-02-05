@@ -78,7 +78,7 @@ const ThemeSwitch = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <MenuItems className="divide-border bg-background dark:bg-surface absolute right-0 z-50 mt-2 w-32 origin-top-right divide-y rounded-md ring-1 shadow-lg ring-black/5 focus:outline-hidden">
+          <MenuItems className="divide-border bg-background dark:bg-surface absolute right-0 z-[100] mt-2 w-32 origin-top-right divide-y rounded-md ring-1 shadow-lg ring-black/5 focus:outline-hidden">
             <RadioGroup value={theme} onChange={setTheme}>
               <div className="p-1">
                 <Radio value="light">
