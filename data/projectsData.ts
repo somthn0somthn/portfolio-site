@@ -14,14 +14,14 @@ const projectsData: Project[] = [
     href: 'https://github.com/somthn0somthn/rsa-ver-chain',
   },
   {
-    title: 'Fusogen - Equitable DAO MMAs',
+    title: 'Fusogen - Equitable DAO M&As',
     description: `A Solana devnet PoC for “merger of equals” mechanics: two treasuries burn assets
     and receive a newly minted combined token, signed by multiple parties in one flow.`,
     imgSrc: '/static/images/fusogen01.png',
     href: 'https://www.fusogen.io/',
   },
   {
-    title: 'Fusogen Interchain - Cross-chain DAO MMAs',
+    title: 'Fusogen Interchain - Cross-chain DAO M&As',
     description: `A Cosmos interchain PoC exploring DAO merger mechanics across Juno and XION via IBC
     relaying—lock value on one chain, mint/settle on the other, with a migration-to-XION roadmap.`,
     imgSrc: '/static/images/fusogen-interchain01.png',
@@ -29,8 +29,8 @@ const projectsData: Project[] = [
   },
   {
     title: 'Beerus - Starknet Light Client',
-    description: `Contributor work on a Starknet light client inspired by Helios—aimed at fast, simple
-    Starknet state queries and contract interaction with Ethereum-backed verification paths.`,
+    description: `Contributor work on a Starknet light client (inspired by Helios) aimed at fast, simple
+    Starknet state queries and contract interaction with L1-backed verification paths.`,
     imgSrc: '/static/images/beerus01.png',
     href: 'https://github.com/somthn0somthn/beerus',
   },

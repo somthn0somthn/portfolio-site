@@ -4,7 +4,7 @@ import { genPageMetadata } from 'app/seo'
 import P5Background from '@/components/P5Background'
 
 export const metadata = genPageMetadata({
-  title: 'Home',
+  title: 'Home |',
   description: 'Portfolio & writing of Luke Mahoney.',
 })
 

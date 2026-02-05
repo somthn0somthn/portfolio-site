@@ -1,7 +1,6 @@
 import 'css/tailwind.css'
 import 'pliny/search/algolia.css'
 import 'remark-github-blockquote-alert/alert.css'
-
 import { Plus_Jakarta_Sans } from 'next/font/google'
 import { Analytics, AnalyticsConfig } from 'pliny/analytics'
 import { SearchProvider, SearchConfig } from 'pliny/search'
@@ -60,7 +59,6 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const basePath = process.env.BASE_PATH || ''
-
   return (
     <html
       lang={siteMetadata.language}
@@ -76,20 +74,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         rel="icon"
         type="image/png"
         sizes="32x32"
-        href={`${basePath}/static/favicons/favicon-32x32.png`}
+        href={`${basePath}/static/favicons/favicon-96x96.png`}
       />
       <link
         rel="icon"
         type="image/png"
         sizes="16x16"
-        href={`${basePath}/static/favicons/favicon-16x16.png`}
+        href={`${basePath}/static/favicons/favicon-96x96.png`}
       />
       <link rel="manifest" href={`${basePath}/static/favicons/site.webmanifest`} />
-      <link
-        rel="mask-icon"
-        href={`${basePath}/static/favicons/safari-pinned-tab.svg`}
-        color="#5bbad5"
-      />
+      <link rel="mask-icon" href={`${basePath}/static/favicons/favicon.svg`} color="#5bbad5" />
       <meta name="msapplication-TileColor" content="#000000" />
       <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
       <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
