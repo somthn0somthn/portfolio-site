@@ -6,10 +6,10 @@ const siteMetadata = {
   description: 'Documenting the "messy middle"',
   language: 'en-us',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
+  siteUrl: 'https://www.lukemahoney.dev',
   siteRepo: 'https://github.com/somthn0somthn/portfolio-site',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
-  socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
+  socialBanner: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
   // mastodon: 'https://mastodon.social/@mastodonuser',
   email: 'luke@fusogen.io',
   github: 'https://github.com/somthn0somthn',
@@ -37,7 +37,7 @@ const siteMetadata = {
       // Remember to add 'us.umami.is' in `next.config.js` as a permitted domain for the CSP
     },
     // plausibleAnalytics: {
-    //   plausibleDataDomain: '', // e.g. tailwind-nextjs-starter-blog.vercel.app
+    //   plausibleDataDomain: '',
     // If you are hosting your own Plausible.
     //   src: '', // e.g. https://plausible.my-domain.com/js/script.js
     // },
@@ -89,14 +89,6 @@ const siteMetadata = {
     kbarConfig: {
       searchDocumentsPath: `${process.env.BASE_PATH || ''}/search.json`, // path to load documents to search
     },
-    // provider: 'algolia',
-    // algoliaConfig: {
-    //   // The application ID provided by Algolia
-    //   appId: 'R2IYF7ETH7',
-    //   // Public API key: it is safe to commit it
-    //   apiKey: '599cec31baffa4868cae4e79f180729b',
-    //   indexName: 'docsearch',
-    // },
   },
 }
 
