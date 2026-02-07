@@ -5,23 +5,24 @@ import { usePathname } from 'next/navigation'
 import { formatDate } from 'pliny/utils/formatDate'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import Link from '@/components/Link'
-import Card from '@/components/Card'
+import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 
-type ListPost = CoreContent<{
+// Same structural type as ListLayout
+export type ListPost = CoreContent<{
   path: string
   date: string
   title: string
   summary?: string
   tags?: string[]
-  images?: string[] | string
 }>
 
 interface PaginationProps {
   totalPages: number
   currentPage: number
 }
-interface ListLayoutProps {
+
+interface NoteListLayoutProps {
   posts: ListPost[]
   title: string
   initialDisplayPosts?: ListPost[]
@@ -30,12 +31,11 @@ interface ListLayoutProps {
 
 function Pagination({ totalPages, currentPage }: PaginationProps) {
   const pathname = usePathname()
-  const segments = pathname.split('/')
-  const lastSegment = segments[segments.length - 1]
   const basePath = pathname
-    .replace(/^\//, '') // Remove leading slash
-    .replace(/\/page\/\d+\/?$/, '') // Remove any trailing /page
-    .replace(/\/$/, '') // Remove trailing slash
+    .replace(/^\//, '')
+    .replace(/\/page\/\d+\/?$/, '')
+    .replace(/\/$/, '')
+
   const prevPage = currentPage - 1 > 0
   const nextPage = currentPage + 1 <= totalPages
 
@@ -73,20 +73,21 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
   )
 }
 
-export default function ListLayout({
+export default function NoteListLayout({
   posts,
   title,
   initialDisplayPosts = [],
   pagination,
-}: ListLayoutProps) {
+}: NoteListLayoutProps) {
   const [searchValue, setSearchValue] = useState('')
-  const filteredBlogPosts = posts.filter((post) => {
+
+  const filteredPosts = posts.filter((post) => {
     const searchContent = post.title + post.summary + post.tags?.join(' ')
     return searchContent.toLowerCase().includes(searchValue.toLowerCase())
   })
 
   const displayPosts =
-    initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredBlogPosts
+    initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredPosts
 
   return (
     <>
@@ -96,7 +97,7 @@ export default function ListLayout({
           <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
             {title}
           </h1>
-          <div className="relative max-w-xl">
+          <div className="relative max-w-lg">
             <label>
               <span className="sr-only">Search articles</span>
               <input
@@ -108,7 +109,7 @@ export default function ListLayout({
               />
             </label>
             <svg
-              className="pointer-events-none absolute top-3 right-3 h-5 w-5 text-gray-400 dark:text-gray-300"
+              className="absolute top-3 right-3 h-5 w-5 text-gray-400 dark:text-gray-300"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -124,41 +125,45 @@ export default function ListLayout({
           </div>
         </div>
 
-        {/* === Grid instead of vertical list === */}
-        <div className="pt-6">
-          {!filteredBlogPosts.length && <p>No posts found.</p>}
-
-          {/* Grid: 1 col on mobile, 2 on md, 3 on xl */}
-          <ul className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {displayPosts.map((post) => {
-              const { path, date, title, summary, tags, images } = post
-
-              const thumbnail =
-                typeof images === 'string'
-                  ? images
-                  : Array.isArray(images) && images.length > 0
-                    ? images[0]
-                    : null
-
-              return (
-                <li key={path}>
-                  <Card
-                    title={title}
-                    description={summary}
-                    imgSrc={thumbnail ?? undefined}
-                    href={`/${path}`}
-                    date={formatDate(date, siteMetadata.locale)}
-                    tags={tags}
-                    linkText="Read more"
-                  />
-                </li>
-              )
-            })}
-          </ul>
-        </div>
+        {/* Original "news reel" list */}
+        <ul>
+          {!filteredPosts.length && 'No posts found.'}
+          {displayPosts.map((post) => {
+            const { path, date, title, summary, tags } = post
+            return (
+              <li key={path} className="py-4">
+                <article className="group hover:bg-surface/50 -mx-4 space-y-2 rounded-lg px-4 py-2 transition-colors xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
+                  <dl>
+                    <dt className="sr-only">Published on</dt>
+                    <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
+                      <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
+                    </dd>
+                  </dl>
+                  <div className="space-y-3 xl:col-span-3">
+                    <div>
+                      <h3 className="text-2xl leading-8 font-bold tracking-tight">
+                        <Link
+                          href={`/${path}`}
+                          className="group-hover:text-primary-500 dark:group-hover:text-primary-400 text-gray-900 transition-colors dark:text-gray-100"
+                        >
+                          {title}
+                        </Link>
+                      </h3>
+                      <div className="flex flex-wrap">
+                        {tags?.map((tag) => <Tag key={tag} text={tag} />)}
+                      </div>
+                    </div>
+                    <div className="prose max-w-none text-gray-500 dark:text-gray-400">
+                      {summary}
+                    </div>
+                  </div>
+                </article>
+              </li>
+            )
+          })}
+        </ul>
       </div>
 
-      {/* Pagination stays exactly the same */}
       {pagination && pagination.totalPages > 1 && !searchValue && (
         <Pagination currentPage={pagination.currentPage} totalPages={pagination.totalPages} />
       )}

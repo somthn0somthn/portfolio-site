@@ -1,0 +1,281 @@
+---
+title: '3 Ways Fixed-Cost Projects Derail (and the Early Warning Signs)'
+date: '2026-02-05'
+lastmod: '2026-02-05'
+tags: ['Delivery', 'Fixed-cost', 'Scoping']
+draft: false
+layout: PostBanner
+summary: 'Fixed-cost delivery can go sideways even when everyone is competent. This post breaks down three common failure modes and shows the early warning signs that appear before timelines (and budgets) slip.'
+images: ['/static/images/iceberg.png']
+authors: ['default']
+---
+
+Fixed-cost contracts are common. For delivery teams, they can be a real
+opportunity, but only when scope is accurately forecasted and tightly
+controlled. When that isn’t the case, entropy takes over: scope shifts or
+expands, the definition of “Done” drifts, and clients and team members alike
+start wondering, “Why are we behind?” Stakeholders become unhappy with the
+costs, and engineers burn out.
+
+---
+
+## Scope drift
+
+Anyone who has worked in R&D-heavy efforts or novel technology stacks has seen
+what scope drift does to delivery. In time-and-materials arrangements, it’s
+painful but survivable because priorities shift, new information arrives, and
+the budget moves with the work. In fixed-cost delivery, the same dynamic is more
+dangerous because scope expands while the economics do not.
+
+Scope drift rarely presents itself as a clean, discrete request, such as “one
+more feature” or “one more test.” More often, it shows up as a shift in what
+“Done” means. This is especially true when the stack is novel, the integration
+surface is moving, or the cost of proving correctness (tests, demos, evidence)
+is higher than stakeholders initially assumed.
+
+Three common shapes tend to appear:
+
+- Definition-of-done drift: Quality expectations tighten midstream. This may
+  appear as stronger correctness requirements, more edge cases, higher test
+  coverage, or stricter acceptance artifacts. Regardless, the initial definition
+  of “Done” was squishy, and the project pays for that ambiguity later, usually
+  at the worst possible time (review, QA, or pre-release).
+- Non-functional drift: Performance, reliability, operational readiness, release
+  cadence, and documentation requirements expand or harden. A feature may
+  technically “work,” but now it must be faster, more reproducible, easier to
+  deploy, easier to audit, or supported across more environments. CI stability
+  often becomes more important and is assumed to be part of "the original
+  scope," whether anyone priced it or not.
+- Integration demands expanding: Components may be built “to spec,” but the
+  surrounding system changes. Dependencies shift and interfaces evolve, while
+  the true effort lands in integration, compatibility, and end-to-end
+  validation. On novel stacks, this is particularly hard to predict because the
+  integration cost is not linear, and it's often where the hidden work
+  accumulates.
+
+Scope drift is product-dependent, but it’s often dressed in innocent-sounding
+language:
+
+- “It’s a small change…”
+- “Can you just…”
+- “Actually, the roadmap needs…”
+- “Stakeholders want…”
+
+Although the phrasing is casual, the impact can be big.
+
+### Early warning signs:
+
+- “Small change” language becomes routine in stakeholder discussions, especially
+  when paired with vague acceptance criteria.
+- Acceptance ambiguity is quantitatively visible in the backlog: ticket reopen
+  rate rises, QA cycles stretch, acceptance criteria are added after
+  implementation starts, and a growing number of “polish,” “cleanup,”
+  “refactor,” or “stabilize” work tickets appear late.
+- Evidence requirements are unstable. For instance, the test plan is incomplete
+  or constantly moving, demo criteria shift, and success is defined as
+  “confidence” rather than concrete artifacts or tooling output.
+
+### How to de-risk:
+
+- Perform a "pre-mortem" before committing. Write down the potential ways the
+  project fails despite competent execution (e.g., integration surprises,
+  test-plan expansion, toolchain churn), and attach a mitigation to each.
+  Examine codebase quality beforehand if possible, document the QA process and
+  integration plans.
+- Define "Done" as functionality plus proof. Make acceptance criteria explicit
+  and tied to concrete outputs: what must pass in tests/CI, what integration
+  evidence is required, what performance thresholds exist (if any), and what
+  artifacts are needed for sign-off. Define a sign-off window up front so
+  acceptance doesn’t drift indefinitely.
+- Make out-of-scope explicit. A short “Not included” list (informed by the
+  pre-mortem) prevents the most common drift pathways (“while you’re in
+  there…”). Keep a change-control path where “yes” is possible, but guard it
+  with an impact assessment and an explicit tradeoff (reduced scope elsewhere or
+  re-budgeting).
+- Document drift weekly. Track what can’t be argued with: reopened ticket rate,
+  acceptance-criteria changes after implementation starts, scope burn-up, and
+  test-plan completion vs execution.
+
+## Invisible platform work
+
+Needless to say, scope drift is the most obvious threat to a project that’s
+otherwise being delivered properly. What you might call “invisible platform
+work” is its more sinister alter ego: work that looks like housekeeping but
+quietly changes the shape of the product and expands the delivery surface area.
+
+It usually starts harmlessly. A client (or your own engineers) notices tech
+debt. Or someone has the genuinely good idea that “this feature could be
+open-sourced” or “this should really be its own library.” This is all innocent
+enough until the team realizes the task at hand is now “it just needs a
+refactor,” or the feature in question “should be split into a standalone repo.”
+
+Because the moment a new repo boundary is introduced, new work comes with it.
+
+CI pipelines have to run in the right places, release and versioning rules have
+to exist, a shared test strategy has to be defined, dependencies have to be
+pinned, documentation has to be generated, and day-to-day build hygiene has to
+be maintained across multiple repos. None of that work is optional once the
+system’s shape has changed. It’s simply the cost of making the new shape real,
+and if it wasn’t budgeted up front, timelines and budgets get squeezed.
+
+As a concrete example, on one project, an upgraded design pattern was adopted,
+and the additional scaffolding made sense as a standalone library. It was the
+right design choice and the kind of improvement that should reduce headaches
+over the long term. The catch was that the refactor and platform work (repo
+split, CI wiring, shared test strategy, release/versioning decisions)
+effectively created a small platform project inside the project. The result was
+roughly several engineer-weeks of overrun.
+
+The pain here was far too asymmetric to be justified. The delivery absorbs the
+cost immediately, while the payoff lands later and can easily land outside the
+original delivery window. Timelines slipped, and the longer-term benefits of the
+improved design weren’t fully realized within the original scope. Overall, an
+upgrade can be correct and still be a schedule risk if the platform work was
+never priced and staffed as real work.
+
+As a working rule, deep refactors mid-delivery are best avoided unless they’re
+clearly justified, explicitly staffed, and (most important) tightly bounded.
+When the system’s shape changes, it also helps to revisit the budget in tandem,
+rather than hoping the work can be “absorbed.” And when dealing with legacy or
+poorly maintained codebases where hygiene issues are likely to surface, it’s
+worth budgeting an explicit platform/refactor contingency up front. In practice,
+that line item can be 10–25% of unadjusted engineering effort to prevent the
+project from paying for it later via stalled PRs, flaky pipelines, and endless
+“non-feature” tickets.
+
+### Early warning signs:
+
+- You’re extracting libraries, splitting repos, or changing module boundaries.
+- Someone says, “We’ll wire up CI later.” Translation: no one owns it today, and
+  it’s being treated as outside scope.
+- These questions become blurry or get pushed to the margins: Which repos will
+  exist at the end of the project? What must (and must not) pass in CI to merge?
+  What exactly needs to pass in this new structure to meet contractual
+  obligations?
+
+### How to de-risk:
+
+- Treat repo/CI work as first-class scope, not background noise. Give it
+  tickets, explicit owners, and acceptance criteria. Where a fixed-cost contract
+  is involved, define the limits up front just like any other feature.
+- Add a visible “platform tax” line item to the contract. It doesn’t need to be
+  huge, but if it isn’t budgeted, it shows up later as strain: timelines
+  tighten, budgets harden, and everyone starts arguing about whether the work
+  “counts.”
+
+## Single points of failure (people or knowledge)
+
+Avoiding single points of failure (SPOFs) is intuitive in theory. However,
+anticipating them up front can prove more challenging. For instance, SPOFs don't
+necessarily present as a large bus factor on the one dev who "knows the whole
+system" (although they can). In R&D/novel stacks, SPOFs can sit above or
+adjacent to the actual system code.
+
+Three patterns show up repeatedly.
+
+### Specification/correctness bottleneck
+
+On some R&D-heavy projects, correctness is explicitly anchored to formal
+specification artifacts (formal methods/spec language work) that define what the system
+is and is not allowed to do. That level of rigor can be a genuine advantage
+because it reduces ambiguity, forces clean design decisions, front-loads a
+surprising amount of scoping, and gives a real definition of “correct” (i.e.,
+“Done”).
+
+The downside is that it can create a serious review gate.
+
+Formal specs still have to be translated into an implementation. When the domain
+lead or spec author is the only person who can reliably judge whether
+sensitive changes preserve the intended model, they become the approval path for
+anything design-adjacent or anything “close to the metal” in the core logic.
+
+This gets amplified when the test suite is treated as proof of spec compliance,
+not just regression coverage. With three or four engineers writing tests in
+parallel, the review load concentrates quickly, the queue builds, decisions lag,
+and “correctness work” starts dictating the project’s pace.
+
+Formal rigor is great but it's an issue when it becomes a congested, single-lane
+bridge.
+
+### Ticketing/sequencing bottleneck
+
+Some systems are modular on paper but not parallelizable in practice. There’s a
+real dependency chain that isn’t always obvious up front. Work has to land in a
+particular order, and attempts to “just start in parallel” tend to produce
+rework or blocked integration once interfaces and invariants meet reality. In
+sequencing-heavy projects, where interfaces are unstable or acceptance criteria
+are still settling, progress depends less on raw implementation capacity and
+more on keeping the next slice of work clearly defined.
+
+In concrete terms, this becomes a ticketing/workflow bottleneck. If a tech lead
+is tasked with translating evolving dependencies into startable tickets, ticket
+readiness becomes the throughput ceiling. Congestion compounds when this team
+leader is also being pulled into cross-team decision meetings and junior
+support. Execution isn’t the bottleneck; work intake and shaping are.
+
+### Discovery/scoping bottleneck
+
+Fixed-cost projects still need discovery. In fact, they usually need it more,
+because PRDs (or similar design docs) are what keep contractable work in front
+of the team and what make “in scope vs out of scope” explicit enough to defend
+later.
+
+The trap is that, while essential to delivery, PRDs can become an ambiguous part
+of the budget and timeline. They’re not always priced beforehand as delivery
+work, even though they consume real capacity.
+
+PRDs have to be written carefully, tied to acceptance criteria, and explicit
+about what is in and out of scope. Done properly, they become the boundary for
+the next contract. That means they require real effort, even if they weren’t
+defined as “engineering work” up front.
+
+For complex systems, engineers have to contribute because knowledge of
+implementation nuances and constraints can’t be outsourced. If discovery isn’t
+explicitly staffed and timeboxed, it competes directly with ticketed work.
+Timelines get squeezed, and teams start context-switching between execution and
+open-ended scoping.
+
+The failure mode is predictable when product direction is fuzzy: PRDs become
+reactive, rushed, or late while ticketed work slows down. Engineers feel spread
+too thin, and the client experiences the discovery period as “stalling,” which
+creates friction right when trust is most important.
+
+### The common theme
+
+Single points of failure aren’t personality problems; they’re capacity planning
+problems that quietly evolve into budget or timeline risk. Here's what to watch
+out for:
+
+### Early warning signs:
+
+- The same name appears in every critical-path sentence or QA sign-off.
+- Growing `WIP` tickets, while `Done` doesn't budge. Review lead time exceeds
+  the team's development cadence.
+- A kanban board is full of tickets, but none are startable.
+- “Just do it in parallel” produces predictable churn: rework, integration
+  stalls, or repeated back-and-forth on what “correct” means.
+- Engineers are context-switching heavily between execution and discovery, and
+  ticketed throughput dips significantly whenever PRD work spikes.
+
+### How to de-risk:
+
+- Make SPOFs explicit early, and list the top "single-lane bridges" that exist.
+  Consider whether other "single-lane bridges" are likely to emerge.
+- Identify tickets that touch the core system and those that are less-sensitive
+  peripheral changes. Categorize accordingly and assign strategically.
+- Make ticket readiness a first-class role with protected time.
+- Treat discovery as real work. In PRDs, include clear acceptance criteria,
+  demo/evidence artifacts, and an "Out of scope" or "Not included" section.
+
+Formal rigor is fine. Sequencing is fine. Discovery is fine. The failure mode is
+pretending none of that consumes capacity.
+
+## Conclusion
+
+Fixed-cost delivery doesn’t fail because teams stop working hard. It fails when
+unpriced work accumulates faster than the plan can absorb it, including drift in
+what “Done” means, invisible platform overhead, and single-lane bridges that
+quietly become the schedule. The fixes are boring but effective. Define “Done”
+as proof, make out-of-scope explicit, price the platform tax, and watch the
+queuing signals closely. If those controls feel heavy, it’s usually because the
+project is already running on hidden debt.

@@ -1,29 +1,54 @@
 @import 'tailwindcss';
-@plugin "@tailwindcss/forms";
+@plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 @source '../node_modules/pliny';
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Core theme configuration */
+/* =========================
+   Theme tokens
+   ========================= */
 @theme {
   /* Font families */
-  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
-  /* Colors */
-  /* Copied from https://tailwindcss.com/docs/theme#default-theme-variable-reference */
-  --color-primary-50: oklch(0.971 0.014 343.198);
-  --color-primary-100: oklch(0.948 0.028 342.258);
-  --color-primary-200: oklch(0.899 0.061 343.231);
-  --color-primary-300: oklch(0.823 0.12 346.018);
-  --color-primary-400: oklch(0.718 0.202 349.761);
-  --color-primary-500: oklch(0.656 0.241 354.308);
-  --color-primary-600: oklch(0.592 0.249 0.584);
-  --color-primary-700: oklch(0.525 0.223 3.958);
-  --color-primary-800: oklch(0.459 0.187 3.815);
-  --color-primary-900: oklch(0.408 0.153 2.432);
-  --color-primary-950: oklch(0.284 0.109 3.907);
+  /* Base tokens (light defaults; dark overrides below in @layer base) */
+  --color-background: #f5f3ff; /* lavender */
+  --color-surface: #e0f2fe; /* pale sky */
+  --color-foreground: #111827; /* slate-ish text */
+  --color-border: color-mix(in oklch, var(--color-foreground) 12%, var(--color-background));
 
+  /* Accents */
+  --brand-teal: #0d9488; /* primary accent */
+  --brand-pink: #f472b6; /* secondary accent */
+
+  /* Primary scale (teal) */
+  --color-primary-50: color-mix(in oklch, var(--brand-teal) 8%, white);
+  --color-primary-100: color-mix(in oklch, var(--brand-teal) 14%, white);
+  --color-primary-200: color-mix(in oklch, var(--brand-teal) 24%, white);
+  --color-primary-300: color-mix(in oklch, var(--brand-teal) 38%, white);
+  --color-primary-400: color-mix(in oklch, var(--brand-teal) 55%, white);
+  --color-primary-500: var(--brand-teal);
+  --color-primary-600: color-mix(in oklch, var(--brand-teal) 92%, black);
+  --color-primary-700: color-mix(in oklch, var(--brand-teal) 82%, black);
+  --color-primary-800: color-mix(in oklch, var(--brand-teal) 70%, black);
+  --color-primary-900: color-mix(in oklch, var(--brand-teal) 58%, black);
+  --color-primary-950: color-mix(in oklch, var(--brand-teal) 45%, black);
+
+  /* Secondary scale (pink) */
+  --color-secondary-50: color-mix(in oklch, var(--brand-pink) 8%, white);
+  --color-secondary-100: color-mix(in oklch, var(--brand-pink) 14%, white);
+  --color-secondary-200: color-mix(in oklch, var(--brand-pink) 24%, white);
+  --color-secondary-300: color-mix(in oklch, var(--brand-pink) 38%, white);
+  --color-secondary-400: color-mix(in oklch, var(--brand-pink) 55%, white);
+  --color-secondary-500: var(--brand-pink);
+  --color-secondary-600: color-mix(in oklch, var(--brand-pink) 92%, black);
+  --color-secondary-700: color-mix(in oklch, var(--brand-pink) 82%, black);
+  --color-secondary-800: color-mix(in oklch, var(--brand-pink) 70%, black);
+  --color-secondary-900: color-mix(in oklch, var(--brand-pink) 58%, black);
+  --color-secondary-950: color-mix(in oklch, var(--brand-pink) 45%, black);
+
+  /* Grays */
   --color-gray-50: oklch(0.985 0.002 247.839);
   --color-gray-100: oklch(0.967 0.003 264.542);
   --color-gray-200: oklch(0.928 0.006 264.531);
@@ -48,21 +73,45 @@
   --z-80: 80;
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
+/* =========================
+   Base
+   ========================= */
 @layer base {
+  /*
+    Tailwind v4 default border color changed to currentColor.
+    This keeps “v3-like” behavior using your border token.
+  */
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+    border-color: var(--color-border, currentColor);
+  }
+
+  :root {
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .dark {
+    color-scheme: dark;
+
+    --color-background: #020617;
+    --color-surface: #0b1120;
+    --color-foreground: #e5e7eb;
+    --color-border: color-mix(in oklch, var(--color-foreground) 18%, var(--color-background));
+  }
+
+  .p5Canvas {
+    position: fixed !important;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
   }
 
   a,
@@ -76,100 +125,136 @@
     border-radius: var(--radius-sm);
     outline-color: var(--color-primary-500);
   }
+
+  /* KBar search input focus override */
+  input[aria-controls='kbar-listbox'],
+  input[aria-controls='kbar-listbox']:focus,
+  input[aria-controls='kbar-listbox']:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    --tw-ring-shadow: none !important;
+  }
+
+  div[class*='overflow-hidden'][class*='rounded-2xl']:focus-within {
+    border-color: var(--color-primary-500) !important;
+    box-shadow: 0 0 0 2px color-mix(in oklch, var(--color-primary-500) 20%, transparent) !important;
+  }
 }
 
+/* =========================
+   Utilities / content styling
+   ========================= */
 @layer utilities {
+  /* Remove Tailwind Typography’s decorative backticks on inline code */
+  .prose :where(code):not(:where([class~='not-prose'] *))::before,
+  .prose :where(code):not(:where([class~='not-prose'] *))::after,
+  .prose-invert :where(code):not(:where([class~='not-prose'] *))::before,
+  .prose-invert :where(code):not(:where([class~='not-prose'] *))::after {
+    content: '' !important;
+  }
+
   .prose {
     & a {
       color: var(--color-primary-500);
+
       &:hover {
         color: var(--color-primary-600);
       }
+
+      /* inline code inside links */
       & code {
         color: var(--color-primary-400);
       }
     }
+
     & :where(h1, h2) {
       font-weight: 700;
       letter-spacing: var(--tracking-tight);
     }
+
     & h3 {
       font-weight: 600;
     }
-    & :where(code):not(pre code) {
-      color: var(--color-indigo-500);
+
+    /* inline code (not code blocks) */
+    & :where(code):not(:where(pre *)) {
+      color: var(--color-secondary-500);
     }
   }
 
   .prose-invert {
     & a {
       color: var(--color-primary-500);
+
       &:hover {
         color: var(--color-primary-400);
       }
+
       & code {
         color: var(--color-primary-400);
       }
     }
+
     & :where(h1, h2, h3, h4, h5, h6) {
-      color: var(--color-gray-100);
+      color: var(--color-foreground);
     }
   }
-}
 
-.task-list-item::before {
-  @apply hidden;
-}
+  .task-list-item::before {
+    @apply hidden;
+  }
 
-.task-list-item {
-  @apply list-none;
-}
+  .task-list-item {
+    @apply list-none;
+  }
 
-.footnotes {
-  @apply mt-12 border-t border-gray-200 pt-8 dark:border-gray-700;
-}
+  .footnotes {
+    @apply mt-12 border-t border-gray-200 pt-8 dark:border-gray-700;
+  }
 
-.data-footnote-backref {
-  @apply no-underline;
-}
+  .data-footnote-backref {
+    @apply no-underline;
+  }
 
-.csl-entry {
-  @apply my-5;
-}
+  .csl-entry {
+    @apply my-5;
+  }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 
-/* https://stackoverflow.com/questions/61083813/how-to-avoid-internal-autofill-selected-style-to-be-applied */
-input:-webkit-autofill,
-input:-webkit-autofill:focus {
-  transition:
-    background-color 600000s 0s,
-    color 600000s 0s;
-}
+  /* Avoid autofill colors */
+  input:-webkit-autofill,
+  input:-webkit-autofill:focus {
+    transition:
+      background-color 600000s 0s,
+      color 600000s 0s;
+  }
 
-.katex-display {
-  overflow: auto hidden;
-}
+  .katex-display {
+    overflow: auto hidden;
+  }
 
-.content-header-link {
-  opacity: 0;
-  margin-left: -24px;
-  padding-right: 4px;
-}
+  .content-header-link {
+    opacity: 0;
+    margin-left: -24px;
+    padding-right: 4px;
+  }
 
-.content-header:hover .content-header-link,
-.content-header-link:hover {
-  opacity: 1;
-}
+  .content-header:hover .content-header-link,
+  .content-header-link:hover {
+    opacity: 1;
+  }
 
-.linkicon {
-  display: inline-block;
-  vertical-align: middle;
+  .linkicon {
+    display: inline-block;
+    vertical-align: middle;
+  }
 }

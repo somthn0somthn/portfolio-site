@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-     preserveAspectRatio="xMidYMid meet" 
-     viewBox="230 95 330 340" 
-     width="48" height="50">
-<path fill="currentColor" opacity="1.000000" stroke="none" 
-	d="
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="48" height="50"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="48" height="50"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="230 95 330 340" width="48" height="50">
+<path fill="currentColor" opacity="1.000000" stroke="none" d="
 M508.101013,321.324097 
 	C506.660004,329.164978 507.524017,336.674103 507.388184,344.150848 
 	C507.207336,354.105469 502.845825,358.021942 492.880127,356.738159 
@@ -237,9 +232,8 @@ M343.578613,336.265045
 	C348.811584,343.026917 350.255096,341.512177 351.163635,339.892853 
 	C352.157257,338.121826 351.813751,336.357483 350.226166,335.045593 
 	C347.974121,333.184570 345.798737,333.102692 343.578613,336.265045 
-z"/>
-<path fill="currentColor" opacity="1.000000" stroke="none" 
-	d="
+z"></path>
+<path fill="currentColor" opacity="1.000000" stroke="none" d="
 M494.220581,361.511841 
 	C506.424622,361.337860 512.546875,355.233521 512.607300,343.610779 
 	C512.633301,338.612396 512.795166,333.604828 512.556763,328.617615 
@@ -281,9 +275,8 @@ M494.220581,361.511841
 	C419.741302,399.972015 436.813751,383.589386 453.453125,366.778107 
 	C460.207703,359.953766 467.920990,357.671112 477.028900,358.869781 
 	C482.634857,359.607574 488.207977,360.594788 494.220581,361.511841 
-z"/>
-<path fill="currentColor" opacity="1.000000" stroke="none" 
-	d="
+z"></path>
+<path fill="currentColor" opacity="1.000000" stroke="none" d="
 M448.666016,211.000473 
 	C448.661652,206.001328 448.850311,201.491302 448.600677,197.005661 
 	C448.337982,192.284790 450.319305,189.108246 454.213165,186.685135 
@@ -297,6 +290,8 @@ M448.666016,211.000473
 	C469.853119,249.475250 466.521545,248.925140 462.007019,247.067642 
 	C451.026581,242.549698 446.976501,234.942169 448.580444,223.486404 
 	C449.129608,219.563919 448.666809,215.499741 448.666016,211.000473 
-z"/>
+z"></path>
 
-</svg>
+</svg></svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
+@media (prefers-color-scheme: dark) { :root { filter: none; } }
+</style></svg>
